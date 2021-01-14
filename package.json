@@ -14,7 +14,8 @@
   "author": "Peter Craftsmn",
   "license": "ISC",
   "dependencies": {
-    "@petercraftsmn/auth-util": "^1.0.3"
+    "@petercraftsmn/auth-util": "^1.0.3",
+    "@petercraftsmn/validate": "^1.0.1"
   },
   "devDependencies": {
     "mocha": "^8.2.1"

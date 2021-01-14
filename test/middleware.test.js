@@ -1,17 +1,15 @@
-const AuthUtil = require('@petercraftsmn/auth-util');
 const assert = require('assert');
+const AuthUtil = require('@petercraftsmn/auth-util');
 const Middleware = require('../lib/middleware');
-
+const middleware = new Middleware();
 const authUtil = new AuthUtil({
     defaultAlgorithm: 'sha512',
     defaultSecret: 'dev-secret',
     defaultOutputType: 'base64',
 });
 
-const middleware = new Middleware();
 
-
-describe('Middleware test', function () {
+describe('Middleware test Jwt functions', function () {
     let nextFunc = function (req, res) {
     };
     let header = {alg: "sha512"};
@@ -154,3 +152,75 @@ describe('Middleware test', function () {
 
 });
 
+describe('Middleware test user functions', function () {
+    let nextFunc = function (req, res) {
+    };
+    let res = {};
+    let req = {};
+
+
+    describe('Testing validation of username and password', function () {
+        beforeEach(() => {
+            req = {
+                body: {
+                    email: "validUsernamePassTest@gmail.com",
+                    password: "secre*77pass"
+                }
+            };
+        });
+
+        it('Email and password incoming are well and good', function (done) {
+            middleware.validateUsernamePassword(req, res, nextFunc);
+            assert.deepStrictEqual(req.incomingUser.email, "validUsernamePassTest@gmail.com",
+                'Both emails are not same');
+            assert.deepStrictEqual((!req.error), true,
+                'Bad password is not caught');
+            done();
+        });
+
+        it('Email and password incoming are not well and good', function (done) {
+            req.body.email = "bad @gmail.com";
+            middleware.validateUsernamePassword(req, res, nextFunc);
+            assert.ok((!!req.error), 'Bad email is not caught');
+            done();
+        });
+
+        it('Email and password incoming are not well and good', function (done) {
+            req.body.password = "verybad>>pass hehhe ";
+            middleware.validateUsernamePassword(req, res, nextFunc);
+            assert.ok((!!req.error), 'Bad password is not caught');
+            done();
+        });
+    });
+
+    describe('User login test', function () {
+        beforeEach(() => {
+            req = {
+                body: {
+                    email: "validUsernamePassTest@gmail.com",
+                    password: "secre*77pass"
+                }
+            };
+        });
+
+        it('Verify user for login', function (done) {
+            middleware.validateUsernamePassword(req, res, nextFunc);
+            req = {
+                ...req, databaseUser: {
+                    user_id: 275537836663,
+                    email: "validUsernamePassTest@gmail.com",
+                    hash: authUtil.createPasswordHash("secre*77pass", authUtil.createRandomSalt())
+                }
+            };
+            middleware.verifyUserForLogin(req, res, nextFunc);
+            assert.deepStrictEqual(req.user.email, "validUsernamePassTest@gmail.com",
+                'Both emails are not same');
+            assert.deepStrictEqual(req.user.user_id, 275537836663,
+                'Both user_id are not same');
+            assert.deepStrictEqual((!req.error), true,
+                'There is error');
+            done();
+        });
+    });
+
+});
