@@ -27,16 +27,32 @@ describe('Middleware test', function () {
             }
         }
     };
-    let req = reqOriginal;
+    let req = {
+        'Authorization': 'Bearer ' + token,
+        get: function (headerName) {
+            if (headerName === 'Authorization') return this[headerName];
+            else {
+                return false;
+            }
+        }
+    };
 
 
     describe('Testing jwt validation and attaching to req', function () {
-        afterEach(() => {
-            req = reqOriginal;
+        beforeEach(() => {
+            req = {
+                'Authorization': 'Bearer ' + token,
+                get: function (headerName) {
+                    if (headerName === 'Authorization') return this[headerName];
+                    else {
+                        return false;
+                    }
+                }
+            };
         });
 
         it('Jwt token incoming in req.header.Authorization undefined', function (done) {
-            req = {...req, 'Authorization': undefined};
+            req = {...reqOriginal, 'Authorization': undefined};
             middleware.validateJwtToken(req, res, nextFunc);
             assert.deepStrictEqual(req.jwtToken, null,
                 'Jwt token is not null');
@@ -44,7 +60,7 @@ describe('Middleware test', function () {
         });
 
         it('Jwt token incoming in req.header.Authorization null', function (done) {
-            req = {...req, 'Authorization': null};
+            req = {...reqOriginal, 'Authorization': null};
             middleware.validateJwtToken(req, res, nextFunc);
             assert.deepStrictEqual(req.jwtToken, null,
                 'Jwt token is not null');
@@ -52,7 +68,7 @@ describe('Middleware test', function () {
         });
 
         it('Jwt token incoming in req.header.Authorization ""', function (done) {
-            req = {...req, 'Authorization': ''};
+            req = {...reqOriginal, 'Authorization': ''};
             middleware.validateJwtToken(req, res, nextFunc);
             assert.deepStrictEqual(req.jwtToken, null,
                 'Jwt token is not null');
@@ -60,7 +76,7 @@ describe('Middleware test', function () {
         });
 
         it('Jwt token incoming in req.header.Authorization ""', function (done) {
-            req = {...req, 'Authorization': 'Bearer '};
+            req = {...reqOriginal, 'Authorization': 'Bearer '};
             middleware.validateJwtToken(req, res, nextFunc);
             assert.deepStrictEqual(req.jwtToken, null,
                 'Jwt token is not null');
@@ -77,8 +93,16 @@ describe('Middleware test', function () {
     });
 
     describe('Testing jwt signature', function () {
-        afterEach(() => {
-            req = reqOriginal;
+        beforeEach(() => {
+            req = {
+                'Authorization': 'Bearer ' + token,
+                get: function (headerName) {
+                    if (headerName === 'Authorization') return this[headerName];
+                    else {
+                        return false;
+                    }
+                }
+            };
         });
 
         it('Check the signatures of jwt token', function (done) {
@@ -90,7 +114,7 @@ describe('Middleware test', function () {
         });
 
         it('Check the signatures of tempered token', function (done) {
-            req = {...req, 'Authorization': 'Bearer ' + token + 'somecrap'};
+            req = {...reqOriginal, 'Authorization': 'Bearer ' + token + 'somecrap'};
             middleware.validateJwtToken(req, res, nextFunc);
             middleware.validateJwtSignature(req, res, nextFunc);
             assert.deepStrictEqual(req.jwtToken, null,
@@ -100,7 +124,7 @@ describe('Middleware test', function () {
     });
 
     describe('Testing jwt parsing', function () {
-        afterEach(() => {
+        beforeEach(() => {
             req = reqOriginal;
         });
 
@@ -111,6 +135,20 @@ describe('Middleware test', function () {
                 {name: "peter singh", id: "128837730383"},
                 'User is not parsed');
             done();
+        });
+    });
+
+    describe('Testing create jwt token', () => {
+        beforeEach(() => {
+            req = {
+                header: {alg: "sha512"},
+                payload: {name: "peter singh", id: "128837730383"}
+            };
+        });
+
+        it('Create jwt', () => {
+            middleware.createJwtToken(req, res, nextFunc);
+            assert.ok(req.jwtToken.length > 30, 'jwtToken not created');
         });
     });
 
