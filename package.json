@@ -1,6 +1,6 @@
 {
   "name": "@petercraftsmn/auth-middleware",
-  "version": "1.0.2",
+  "version": "1.0.5",
   "repository": "https://github.com/petercraftsmn/auth-middleware",
   "description": "General purpose authentication",
   "main": "index.js",
@@ -14,8 +14,8 @@
   "author": "Peter Craftsmn",
   "license": "ISC",
   "dependencies": {
-    "@petercraftsmn/auth-util": "^1.0.3",
-    "@petercraftsmn/validate": "^1.0.1"
+    "@petercraftsmn/auth-util": "^1.0.5",
+    "@petercraftsmn/validate": "^1.0.5"
   },
   "devDependencies": {
     "mocha": "^8.2.1"
