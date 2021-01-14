@@ -1,6 +1,6 @@
 {
   "name": "@petercraftsmn/auth-middleware",
-  "version": "3.0.1",
+  "version": "1.0.1",
   "repository": "https://github.com/petercraftsmn/auth-middleware",
   "description": "General purpose authentication",
   "main": "index.js",
