@@ -13,8 +13,10 @@
   ],
   "author": "Peter Craftsmn",
   "license": "ISC",
-  "devDependencies": {
-    "mocha": "^7.1.0"
+  "dependencies": {
+    "@petercraftsmn/auth-util": "^1.0.3"
   },
-  "dependencies": {}
+  "devDependencies": {
+    "mocha": "^8.2.1"
+  }
 }
