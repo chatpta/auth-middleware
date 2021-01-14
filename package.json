@@ -1,0 +1,20 @@
+{
+  "name": "@petercraftsmn/auth-middleware",
+  "version": "3.0.1",
+  "repository": "https://github.com/petercraftsmn/auth-middleware",
+  "description": "General purpose authentication",
+  "main": "index.js",
+  "scripts": {
+    "test": "export NODE_ENV=test && mocha --watch --recursive"
+  },
+  "keywords": [
+    "auth",
+    "user"
+  ],
+  "author": "Peter Craftsmn",
+  "license": "ISC",
+  "devDependencies": {
+    "mocha": "^7.1.0"
+  },
+  "dependencies": {}
+}
